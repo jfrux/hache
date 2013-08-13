@@ -4,6 +4,10 @@
 Hache is a web development tool targeting developers that want a simple way to start 
 pre-configured httpd instances in any directory.
 
+## Yeah, but does it work?
+Not really yet, still in heavy development... no timeline really! Sorry!
+
+## Usage
 Hache can be configured with very little knowledge of the inner workings of Apache or it's configuration files.
 ```
 sudo npm install hache -g
