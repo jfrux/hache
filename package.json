@@ -1,0 +1,33 @@
+{
+  "name": "hache",
+  "version": "0.0.1",
+  "description": "Easily start and configure apache from command line (in any directory)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/joshuairl/hache.git"
+  },
+  "dependencies": {
+    "commander": "~2.0.0",
+    "underscore": "~1.5.1"
+  },
+  "keywords": [
+    "apache",
+    "cli",
+    "static-files",
+    "static-site",
+    "staticfilehandler",
+    "simplehttpserver",
+    "pache",
+    "hache"
+  ],
+  "preferGlobal": "true",
+  "bin": {
+    "hache": "./bin/hache"
+  },
+  "author": "Joshua F. Rountree",
+  "license": "MIT"
+}
