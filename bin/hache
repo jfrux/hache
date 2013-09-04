@@ -3,26 +3,7 @@
 /**
  * Module dependencies.
  */
-var program = require('commander');
-var commands = require("../lib/cli")
-var _ = require("underscore")
-
-program
-  .version('0.0.1')
-  .usage('<command ...> [options] ')
-
-_.each(commands,function (command) {
-  program
-    .command(command.usage)
-    .description(command.description)
-
-  _.each(command.options, function (option) {
-    program.option(option);
-  })
-
-  program.action(command.action)
-},pro)
-
-program
-  .parse(process.argv)
-  .outputHelp()
+var path = require('path');
+var fs = require('fs');
+var lib = path.dirname(fs.realpathSync(__filename));
+require(path.resolve(lib,'../lib/cli/command')).run();

@@ -1,0 +1,90 @@
+#!/usr/bin/env node
+var path = require("path")
+require("js-yaml")
+var defaultConfig = require("./default_config.yml")
+var config = {};
+var dir = (process.argv[2] ? path.resolve(process.argv[2]) : process.cwd());
+var port = process.argv[3] || 3000;
+
+var dotfile = require("../dotfile")('pache',{ dirname: dir, extname:'', format:'yaml' })
+
+initConfig = function(callback) {
+  dotfile.exists(function (yesno) {
+    if(!yesno) {
+      dotfile.write(defaultConfig, function (err) {
+        if(err) {
+          return callback(err,null)
+        }
+        dotfile.read(function (err, fromdisk) {
+          if(err) {
+            return callback(err,null)
+          }
+          callback(null,fromdisk)
+        });
+      });
+    } else {
+      dotfile.read(function (err, fromdisk) {
+        if(err) {
+          return callback(err,null)
+        }
+        callback(null,fromdisk)
+      });
+    }
+  });
+}
+
+initConfig(function(err,data) {
+  if(err) {
+    return new Error(err);
+  }
+  config = data;
+  console.log(config);
+  var httpdconf = path.join(dir,"conf/httpd.conf")
+
+  var parseError = false;
+  // try {
+  //   var port = parseInt(port, 10);
+  // } catch (e) {
+  //   parseError = true;
+  // }
+
+  if (parseError || port == null || typeof port !== 'number' || port < 0 || port > 70000) {
+    throw 'the second command line arg, if present, should be a port number.\n Example: pache . 2000';
+  }
+
+  console.log('pache ' + (process.argv[2] || '.') + ' ' + port);
+  console.log(
+    'Running apache at ' + dir + ' (' + process.argv[2] + ') on port ' + port
+  );
+
+  //full httpd docs: http://httpd.apache.org/docs/2.4/programs/httpd.html
+  var httpd = require('child_process').exec(
+  'sudo httpd -k start'+ /* Without sudo it fails:
+                           (13)Permission denied: make_sock: could not bind to address [::]:80
+                           (13)Permission denied: make_sock: could not bind to address 0.0.0.0:80
+                           no listening sockets available, shutting down
+                           Unable to open logs */
+  ' -c "DocumentRoot ' + dir  + '"' +
+  ' -c "Listen '       + port + '"' +
+  ' -c "AccessFileName .htaccess"'     + 
+  ' -c "DirectoryIndex index.html index.htm index.php index.php4 index.php5"' +
+  ' -c "ErrorLog /dev/stdout"'         + // send logs to terminal
+  ' -c "CustomLog /dev/stdout common"' +
+  ' -e info'                           + // Set LogLevel http://httpd.apache.org/docs/2.4/mod/core.html#loglevel
+  // Without this.. "httpd: Could not reliably determine the server's fully qualified domain name, using MBP018-RWC.local for ServerName"
+  ' -c "ServerName localhost"' +
+  ' -D FOREGROUND');
+
+  httpd.stdout.on('data', function httpdStdout(data) {
+    console.log(data);
+  });
+
+  httpd.stderr.on('data', function httpdStderr(data) {
+    console.log(data);
+  });
+
+  httpd.on('close', function httpdClose(code) {
+    console.log('httpd process exited with code ' + code);
+  });
+});
+

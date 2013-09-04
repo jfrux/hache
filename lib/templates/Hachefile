@@ -1,0 +1,5 @@
+port:3000
+dependencies:
+  php:"5.4"
+  mysql:"5.5"
+  

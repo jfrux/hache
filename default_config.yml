@@ -1,0 +1,9 @@
+ServerRoot: "/usr/local/apache2"
+ServerName: "localhost"
+ServerAlias: "*.localhost.dev"
+DocumentRoot: process.cwd()
+Listen: 3000
+AccessFileName: .htaccess
+DirectoryIndex: "index.html index.htm index.php index.php4 index.php5"
+ErrorLog: ".hache_logs/logs/error_log"
+AccessLog: ".hache_logs/access_log common"
