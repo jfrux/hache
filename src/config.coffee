@@ -14,11 +14,14 @@ userConf = fs.readFileSync configPath,
 
 userConf = yaml.safeLoad(userConf)
 httpd = httpdConf(userConf)
-fs.writeFileSync(path.join(path.dirname(configPath),'httpd.conf'),httpd)
+
+#fs.writeFileSync(path.join(path.dirname(configPath),'httpd.conf'),httpd)
+
 try
   httpdBin = which("httpd")
 catch e
   httpdBin = which("apache2")
+
 if fs.existsSync(configPath)
   module.exports = 
     httpd: httpdConf

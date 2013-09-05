@@ -1,6 +1,7 @@
 fs = require "fs"
 path = require("path")
 _ = require "underscore"
+Tail = require("tail").Tail
 config = require("../../config")
 httpdBin = config.httpdBin
 exports.run = ->
@@ -10,8 +11,16 @@ exports.run = ->
     console.log "Starting `hache` server instance..."
   
   console.log 'Running apache at ' + config.hache.ServerName + ' on port ' + config.hache.Listen
+  errorLog = new Tail(path.join(process.cwd(),'.hache/logs/errors'))
+  accessLog = new Tail(path.join(process.cwd(),'.hache/logs/access'))
+  
+  errorLog.on "line", (data) ->
+    console.error data
+
+  accessLog.on "line", (data) ->
+    console.log data
   cmd = [
-    "sudo #{httpdBin} -k start"
+    "#{httpdBin} -k start"
     "-f #{path.join(process.cwd(),'.hache','httpd.conf')}"
     '-e info'
     '-D FOREGROUND'
