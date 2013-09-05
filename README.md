@@ -1,8 +1,8 @@
 #HACHE
 
 ## What is it?
-Hache is a web development tool targeting developers that want a simple way to start 
-pre-configured httpd instances in any directory.
+Hache is a web development tool targeting developers that want a simple way to start pre-configured httpd instances in any directory.
+Developing a PHP web app? CFML? WordPress? Simply add the module you need to configure Hache just how you want it, and start the server.
 
 ## Yeah, but does it work?
 Not really yet, still in heavy development... no timeline really! Sorry!
